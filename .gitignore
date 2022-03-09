@@ -53,7 +53,7 @@ dkms.conf
 
 
 #My
-
+build*
 build/
 build_local/
 cmake-build-debug/
