@@ -1,12 +1,17 @@
-#include "lib_restotaunt.h"
+#include "restoraunt.h"
 
-enum
-{
-    SUCCESS, FAILURE
-};
+#include <stdio.h>
+#include <stdlib.h>
 
-int main()
-{
-    
-    return SUCCESS;
+int main() {
+  // init
+  int count = 0;
+  Client *clients = read_clients(&count);
+
+  // job
+
+  // free
+  free_clients(clients, &count);
+
+  return EXIT_SUCCESS;
 }

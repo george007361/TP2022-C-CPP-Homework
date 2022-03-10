@@ -11,10 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options(-Wall -Wextra -pedantic -fPIC)
 
-add_subdirectory(lib/lib_restoraunt)
+add_subdirectory(lib/restoraunt)
+add_subdirectory(lib/functions)
+
 
 add_executable(main src/main.c)
-target_link_libraries(main lib_restoraunt)
+target_link_libraries(main restoraunt)
 
 # --------------
 # set(BUILD_TESTS OFF)
