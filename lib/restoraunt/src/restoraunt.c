@@ -4,52 +4,55 @@
 #include <stdlib.h>
 
 int read_client(Client *client) {
-  /* int a = (client->name = read_str());
-  int b = scanf("%i", &client->receipt);
-  int c = scanf("%i", &client->table); */
-  /* if ((client->name = read_str()) == NULL || !scanf("%i", &client->receipt)
-|| !scanf("%i", &client->table)) return EXIT_FAILURE;
-} */
-  client->name = read_str();
-  client->receipt = read_int();
-  client->table = read_int();
-
-  return 1;
-}
-
-Client *read_clients(int *count) {
-  *count = 0;
-  int size = BUFF_SIZE;
-
-  Client *clients = (Client *)malloc(size * sizeof(Client));
-  if (!clients)
+  if (!(client->name = read_str()))
+    return EXIT_FAILURE;
+  int is_error = 0;
+  client->receipt = read_int(&is_error);
+  client->table = read_int(&is_error);
+  if (is_error)
     return EXIT_FAILURE;
 
+  return strlen(client->name) ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+int read_clients(Clients *clients) {
   char key;
 
   while ((key = read_char()) == CLIENT_SEPARATOR) {
     Client new_client;
 
-    if (!read_client(&new_client)) {
-      printf("Cant read %i client.\n", *count);
+    if (read_client(&new_client) == EXIT_FAILURE) {
+      printf("Can't read client №%i\n", clients->count + 1);
+      free_client(&new_client);
       return EXIT_FAILURE;
     }
-    clients[(*count)++] = new_client;
+    if (clients->capacity == clients->count) {
+      clients->arr = (Client *)realloc(
+          clients->arr,
+          sizeof(Client) * (clients->capacity ? clients->capacity *= 2 : 1));
+      if (!clients->arr)
+        return EXIT_FAILURE;
+    }
+    clients->arr[clients->count++] = new_client;
   }
 
-  printf("Read %i clients\n", *count);
+  printf("Read %i clients\n", clients->count);
 
-  return clients;
+  return EXIT_SUCCESS;
 }
 
-void free_clients(Client *clients, int *count) {
-  if (clients != NULL) {
-    for (int i = 0; i < *count; i++) {
-      if (clients[i].name != NULL)
-        free(clients[i].name);
+void free_client(Client *client) {
+  if (client->name)
+    free(client->name);
+}
+
+void free_clients(Clients clients) {
+  if (clients.arr) {
+    for (int i = 0; i < clients.count; i++) {
+      free_client(&clients.arr[i]);
     }
-    free(clients);
+    free(clients.arr);
   }
 
-  *count = 0;
+  clients.capacity = clients.count = 0;
 }

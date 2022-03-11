@@ -10,7 +10,7 @@ char read_char() {
   return c != '\n' ? c : '\0';
 }
 
-int read_int() {
+int read_int(int *is_err) {
   int res = 0;
   char c;
   while ((c = getchar()) != EOF && c != '\n') {
@@ -18,6 +18,7 @@ int read_int() {
       while ((c = getchar()) != '\n' && c != '\0' && c != EOF)
         ;
       fprintf(stderr, "Tried to read int, but it is not a number\n");
+      *is_err = 1;
       return 0;
     }
     res = res * 10 + (c - '0');

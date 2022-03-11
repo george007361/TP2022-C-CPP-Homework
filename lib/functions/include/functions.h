@@ -8,7 +8,7 @@ typedef struct buffer {
 } buffer;
 
 char read_char();
-int read_int();
+int read_int(int *is_err);
 char *read_str();
 
 #endif // FUNCTIONS_H_
