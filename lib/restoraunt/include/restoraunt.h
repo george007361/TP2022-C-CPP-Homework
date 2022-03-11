@@ -18,22 +18,10 @@ typedef struct Clients {
   int count;
 } Clients;
 
-typedef struct Table {
-  int id;
-  int *clients_indexes;
-  int count;
-  int capacity;
-} Table;
-
-typedef struct Tables {
-  Table *arr;
-  int count;
-  int capacity;
-} Tables;
-
 int read_clients(Clients *clients);
 void free_client(Client *client);
 void free_clients(Clients clients);
-int group_clients(Tables *tables);
+void quick_sort_by_table_clients(Clients clients);
+void print_clietns(Clients clients);
 
 #endif // RESTORAUNT_H_

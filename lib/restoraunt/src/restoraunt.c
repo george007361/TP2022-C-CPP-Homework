@@ -29,11 +29,12 @@ int read_clients(Clients *clients) {
     if (clients->capacity == clients->count) {
       clients->arr = (Client *)realloc(
           clients->arr,
-          sizeof(Client) * (clients->capacity ? clients->capacity *= 2 : 1));
+          sizeof(Client) * (clients->capacity = clients->capacity ? clients->capacity *= 2 : 1));
       if (!clients->arr)
         return EXIT_FAILURE;
     }
     clients->arr[clients->count++] = new_client;
+    print_clietns(*clients);
   }
 
   printf("Read %i clients\n", clients->count);
@@ -55,4 +56,53 @@ void free_clients(Clients clients) {
   }
 
   clients.capacity = clients.count = 0;
+}
+
+void swap_clients(Clients clients, int a, int b) {
+  Client tmp = clients.arr[a];
+  clients.arr[a] = clients.arr[b];
+  clients.arr[b] = tmp;
+}
+
+// Возвращает индекс, на который встанет пивот после разделения.
+int partition(Clients clients, int a,
+              int n) { // a начальный индекс, n - количество элементов отн. a
+  if (n <= 1) {
+    return 0;
+  }
+  const int pivot = clients.arr[a + n - 1].table;
+  int i = 0, j = n - 2;
+  while (i <= j) {
+    // Не проверяем, что i < n - 1, т.к. a[n - 1] == pivot.
+    for (; clients.arr[a + i].table < pivot; ++i) {
+    }
+    for (; j >= 0 && !(clients.arr[a + j].table < pivot); --j) {
+    }
+    if (i < j) {
+      swap_clients(clients, a + i, a + j);
+      i++;
+      j++;
+    }
+  }
+  swap_clients(clients, a + i, a + n - 1);
+  return i;
+}
+
+void quick_sort(Clients clients, int a, int n) {
+  int part = partition(clients, a, n);
+  if (part > 0)
+    quick_sort(clients, a, part);
+  if (part + 1 < n)
+    quick_sort(clients, a + part + 1, n - (part + 1));
+}
+
+void quick_sort_by_table_clients(Clients clients) {
+  quick_sort(clients, 0, clients.count);
+}
+
+void print_clietns(Clients clients) {
+  for (int i = 0; i < clients.count; i++) {
+    printf("---\n%s\n%i\n%i\n---\n", clients.arr[i].name,
+           clients.arr[i].receipt, clients.arr[i].table);
+  }
 }

@@ -10,10 +10,8 @@ int main() {
     printf("Some issues while reading clients..\n");
 
   // job
-  for (int i = 0; i < clients.count; i++) {
-    printf("---\n%s\n%i\n%i\n---\n", clients.arr[i].name,
-           clients.arr[i].receipt, clients.arr[i].table);
-  }
+  quick_sort_by_table_clients(clients);
+  print_clietns(clients);
 
   // free
   free_clients(clients);
