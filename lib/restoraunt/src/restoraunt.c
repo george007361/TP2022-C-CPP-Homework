@@ -2,13 +2,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int read_client(Client *client) {
+  if (!client)
+    return EXIT_FAILURE;
+
   if (!(client->name = read_str()))
     return EXIT_FAILURE;
+
   int is_error = 0;
+
   client->receipt = read_int(&is_error);
   client->table = read_int(&is_error);
+
   if (is_error)
     return EXIT_FAILURE;
 
@@ -16,67 +23,87 @@ int read_client(Client *client) {
 }
 
 int read_clients(Clients *clients) {
-  char key;
+  if (!clients)
+    return EXIT_FAILURE;
 
-  while ((key = read_char()) == CLIENT_SEPARATOR) {
+  printf("Format:\n-----\n#<Name>\n<Receipt>\n<Table>\n-----\n<Any symbol to "
+         "exit>\n\n");
+
+  while (read_char() == CLIENT_SEPARATOR) {
     Client new_client;
 
     if (read_client(&new_client) == EXIT_FAILURE) {
-      printf("Can't read client №%i\n", clients->count + 1);
+      fprintf(stderr, "Can't read client №%li\n", clients->count + 1);
+
       free_client(&new_client);
+
       return EXIT_FAILURE;
     }
+
     if (clients->capacity == clients->count) {
-      clients->arr = (Client *)realloc(
+      Client *pnew_arr = (Client *)realloc(
           clients->arr,
-          sizeof(Client) * (clients->capacity = clients->capacity ? clients->capacity *= 2 : 1));
-      if (!clients->arr)
+          sizeof(Client) * (clients->capacity = clients->capacity
+                                                    ? clients->capacity *= 2
+                                                    : 1));
+      if (!pnew_arr) {
+        fprintf(stderr, "Realloc error: read_clients()\n");
+
+        free_clients(clients);
+
         return EXIT_FAILURE;
+      }
+      clients->arr = pnew_arr;
     }
     clients->arr[clients->count++] = new_client;
-    print_clietns(*clients);
+    // print_clietns(*clients);
   }
 
-  printf("Read %i clients\n", clients->count);
+  // printf("Read %i clients\n", clients->count);
 
   return EXIT_SUCCESS;
 }
 
 void free_client(Client *client) {
-  if (client->name)
-    free(client->name);
-}
+  if (client) {
+    if (client->name)
+      free(client->name);
 
-void free_clients(Clients clients) {
-  if (clients.arr) {
-    for (int i = 0; i < clients.count; i++) {
-      free_client(&clients.arr[i]);
-    }
-    free(clients.arr);
+    client->receipt = client->table = -1;
   }
-
-  clients.capacity = clients.count = 0;
 }
 
-void swap_clients(Clients clients, int a, int b) {
-  Client tmp = clients.arr[a];
-  clients.arr[a] = clients.arr[b];
-  clients.arr[b] = tmp;
+void free_clients(Clients *clients) {
+  if (clients) {
+    if (clients->arr) {
+      for (size_t i = 0; i < clients->count; i++) {
+        free_client(&clients->arr[i]);
+      }
+
+      free(clients->arr);
+    }
+
+    clients->capacity = clients->count = 0;
+  }
 }
 
-// Возвращает индекс, на который встанет пивот после разделения.
-int partition(Clients clients, int a,
-              int n) { // a начальный индекс, n - количество элементов отн. a
+void swap_clients(Clients *clients, int a, int b) {
+  Client tmp = clients->arr[a];
+  clients->arr[a] = clients->arr[b];
+  clients->arr[b] = tmp;
+}
+
+int partition(Clients *clients, int a, int n) {
   if (n <= 1) {
     return 0;
   }
-  const int pivot = clients.arr[a + n - 1].table;
+
+  const int pivot = clients->arr[a + n - 1].table;
   int i = 0, j = n - 2;
   while (i <= j) {
-    // Не проверяем, что i < n - 1, т.к. a[n - 1] == pivot.
-    for (; clients.arr[a + i].table < pivot; ++i) {
+    for (; clients->arr[a + i].table < pivot; ++i) {
     }
-    for (; j >= 0 && !(clients.arr[a + j].table < pivot); --j) {
+    for (; j >= 0 && !(clients->arr[a + j].table < pivot); --j) {
     }
     if (i < j) {
       swap_clients(clients, a + i, a + j);
@@ -88,7 +115,7 @@ int partition(Clients clients, int a,
   return i;
 }
 
-void quick_sort(Clients clients, int a, int n) {
+void quick_sort(Clients *clients, int a, int n) {
   int part = partition(clients, a, n);
   if (part > 0)
     quick_sort(clients, a, part);
@@ -96,13 +123,16 @@ void quick_sort(Clients clients, int a, int n) {
     quick_sort(clients, a + part + 1, n - (part + 1));
 }
 
-void quick_sort_by_table_clients(Clients clients) {
-  quick_sort(clients, 0, clients.count);
+void quick_sort_by_table_clients(Clients *clients) {
+  if (!clients)
+    return;
+
+  quick_sort(clients, 0, clients->count);
 }
 
-void print_clietns(Clients clients) {
-  for (int i = 0; i < clients.count; i++) {
-    printf("---\n%s\n%i\n%i\n---\n", clients.arr[i].name,
+void print_clietns(const Clients clients) {
+  for (size_t i = 0; i < clients.count; i++) {
+    printf("Name: %s\n Receipt: %i\n Table: %i\n\n", clients.arr[i].name,
            clients.arr[i].receipt, clients.arr[i].table);
   }
 }

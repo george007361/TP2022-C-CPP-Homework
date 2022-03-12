@@ -1,5 +1,5 @@
-#ifndef RESTORAUNT_H_
-#define RESTORAUNT_H_
+#ifndef LIB_RESTORAUNT_INCLUDE_RESTORAUNT_H_
+#define LIB_RESTORAUNT_INCLUDE_RESTORAUNT_H_
 
 #include "functions.h"
 
@@ -9,19 +9,19 @@
 typedef struct Client {
   char *name;
   int table;
-  int receipt
+  int receipt;
 } Client;
 
 typedef struct Clients {
   Client *arr;
-  int capacity;
-  int count;
+  size_t capacity;
+  size_t count;
 } Clients;
 
 int read_clients(Clients *clients);
 void free_client(Client *client);
-void free_clients(Clients clients);
-void quick_sort_by_table_clients(Clients clients);
-void print_clietns(Clients clients);
+void free_clients(Clients *clients);
+void quick_sort_by_table_clients(Clients *clients);
+void print_clietns(const Clients clients);
 
-#endif // RESTORAUNT_H_
+#endif // LIB_RESTORAUNT_INCLUDE_RESTORAUNT_H_
