@@ -1,20 +1,18 @@
 #include "restoraunt.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-int read_client(Client *client) {
+int read_client(Client *client, FILE *stream) {
   if (!client)
     return EXIT_FAILURE;
 
-  if (!(client->name = read_str()))
+  if (!(client->name = read_str(stream)))
     return EXIT_FAILURE;
 
   int is_error = 0;
 
-  client->receipt = read_int(&is_error);
-  client->table = read_int(&is_error);
+  client->receipt = read_int(&is_error, stream);
+  client->table = read_int(&is_error, stream);
 
   if (is_error)
     return EXIT_FAILURE;
@@ -22,20 +20,25 @@ int read_client(Client *client) {
   return strlen(client->name) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-int read_clients(Clients *clients) {
+Clients init_clients() {
+  Clients cls = {NULL, 0, 0};
+  return cls;
+}
+
+int read_clients(Clients *clients, FILE *stream) {
   if (!clients)
     return EXIT_FAILURE;
 
   printf("Format:\n-----\n#<Name>\n<Receipt>\n<Table>\n-----\n<Any symbol to "
          "exit>\n\n");
 
-  while (read_char() == CLIENT_SEPARATOR) {
+  while (read_char(stream) == CLIENT_SEPARATOR) {
     Client new_client;
-
-    if (read_client(&new_client) == EXIT_FAILURE) {
+    if (read_client(&new_client, stream) == EXIT_FAILURE) {
       fprintf(stderr, "Can't read client №%li\n", clients->count + 1);
 
       free_client(&new_client);
+      free_clients(clients);
 
       return EXIT_FAILURE;
     }
@@ -56,19 +59,17 @@ int read_clients(Clients *clients) {
       clients->arr = pnew_arr;
     }
     clients->arr[clients->count++] = new_client;
-    // print_clietns(*clients);
   }
-
-  // printf("Read %i clients\n", clients->count);
 
   return EXIT_SUCCESS;
 }
 
 void free_client(Client *client) {
   if (client) {
-    if (client->name)
+    if (client->name) {
       free(client->name);
-
+      client->name = NULL;
+    }
     client->receipt = client->table = -1;
   }
 }
@@ -81,6 +82,7 @@ void free_clients(Clients *clients) {
       }
 
       free(clients->arr);
+      clients->arr = NULL;
     }
 
     clients->capacity = clients->count = 0;
@@ -131,6 +133,11 @@ void quick_sort_by_table_clients(Clients *clients) {
 }
 
 void print_clietns(const Clients clients) {
+  if (clients.arr == NULL) {
+    fprintf(stderr, "Print_client(): error NULL array\n");
+    return;
+  }
+
   for (size_t i = 0; i < clients.count; i++) {
     printf("Name: %s\n Receipt: %i\n Table: %i\n\n", clients.arr[i].name,
            clients.arr[i].receipt, clients.arr[i].table);

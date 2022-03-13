@@ -6,6 +6,9 @@
 #define CLIENT_SEPARATOR '#'
 #define BUFF_SIZE 5
 
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct Client {
   char *name;
   int table;
@@ -18,7 +21,8 @@ typedef struct Clients {
   size_t count;
 } Clients;
 
-int read_clients(Clients *clients);
+Clients init_clients();
+int read_clients(Clients *clients, FILE *stream);
 void free_client(Client *client);
 void free_clients(Clients *clients);
 void quick_sort_by_table_clients(Clients *clients);
