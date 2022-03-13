@@ -10,45 +10,62 @@ set(CMAKE_C_STANDART_REQURED ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(-Wall -Wextra -pedantic -fPIC)
+
+set(BUILD_TESTS OFF)
+option(TEST_FUNCTIONS "Test functions.c" OFF)
+option(TEST_RESTORAUNT "Test restoraunt.c" OFF)
+option(TEST_ALL "Test all" OFF)
+option(COVERAGE "Generate coverage files" OFF)
+option(SANITIZERS "Use sanitizers" OFF)
+
+# SANITIZERS
+
+if(SANITIZERS)
+    message("->Sanitizers flag ON")
+    add_compile_options(-fno-omit-frame-pointer -g -fsanitize=address,undefined -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error)
+    add_link_options(-fsanitize=address)
+endif(SANITIZERS)
+
+# END SANITIZERS
+
 # COVERAGE
 
-option(COVERAGE "Generate coverage files" OFF)
 if(COVERAGE)
+    message("->Coverage flag ON")
     set(TEST_ALL ON)
-    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fprofile-arcs -ftest-coverage -O0")
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -fprofile-arcs -ftest-coverage -O0")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
 endif(COVERAGE)
 
 # END COVERAGE
 
 # TESTS
-set(BUILD_TESTS OFF)
-option(TEST_FUNCTIONS "Test functions.c" OFF)
-option(TEST_RESTORAUNT "Test restoraunt.c" OFF)
-option(TEST_ALL "Test all" OFF)
 
 if(TEST_ALL)
+    message("->Test all flag ON")
     set(TEST_FUNCTIONS ON)
     set(TEST_RESTORAUNT ON)
 endif(TEST_ALL)
 
 if(TEST_RESTORAUNT)
+    message("->Test restoraunt lib flag ON")
     set(BUILD_TESTS ON)
 endif(TEST_RESTORAUNT)
 
 if(TEST_FUNCTIONS)
+    message("->Test functions lib flag ON")
     set(BUILD_TESTS ON)
 endif(TEST_FUNCTIONS)
 
 if(BUILD_TESTS)
+    message("->Build tests flag ON")
     add_subdirectory(./gtest)
     enable_testing()
     include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 endif(BUILD_TESTS)
 
 # END TESTS
-
-add_compile_options(-Wall -Wextra -pedantic -fPIC)
 
 add_subdirectory(lib/restoraunt)
 add_subdirectory(lib/functions)
