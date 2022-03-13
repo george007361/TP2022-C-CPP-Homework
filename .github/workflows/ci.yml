@@ -1,7 +1,5 @@
 name: HW_1_CI
-on: 
-  push:
-  pull-request:
+on: push
 
 jobs:
   build:
