@@ -10,6 +10,17 @@ set(CMAKE_C_STANDART_REQURED ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# COVERAGE
+
+option(COVERAGE "Generate coverage files" OFF)
+if(COVERAGE)
+    set(TEST_ALL ON)
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fprofile-arcs -ftest-coverage -O0")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
+endif(COVERAGE)
+
+# END COVERAGE
+
 # TESTS
 set(BUILD_TESTS OFF)
 option(TEST_FUNCTIONS "Test functions.c" OFF)
