@@ -1,0 +1,12 @@
+name: HW_1_CI
+on: 
+  push:
+  pull-request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+      - run: cmake -B build
+      - run: make -C build
