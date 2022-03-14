@@ -44,11 +44,12 @@ int read_clients(Clients *clients, FILE *stream) {
     }
 
     if (clients->capacity == clients->count) {
-      Client *pnew_arr = (Client *)realloc(
-          clients->arr,
-          sizeof(Client) * (clients->capacity = clients->capacity
-                                                    ? clients->capacity *= 2
-                                                    : 1));
+      clients->capacity *= 2;
+      if (!clients->capacity)
+        clients->capacity = 1;
+
+      Client *pnew_arr =
+          (Client *)realloc(clients->arr, sizeof(Client) * clients->capacity);
       if (!pnew_arr) {
         fprintf(stderr, "Realloc error: read_clients()\n");
 
