@@ -4,7 +4,6 @@ jobs:
   Build:
     name: Build
     runs-on: ubuntu-latest
-    cmake_extra_args: ""
     steps:
       - uses: actions/checkout@v2
       - run: cmake -B build
