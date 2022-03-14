@@ -5,7 +5,7 @@ jobs:
     name: GTest and coverage
     runs-on: ubuntu-latest
     steps:
-      - name: checkout all the submodules
+      - name: Checkout all the submodules
         uses: actions/checkout@v2
         with:
           submodules: recursive
@@ -24,10 +24,10 @@ jobs:
       
       - name: Generate coverage report
         run: cd ./build
-      - run: lcov -t "TESTS" -d ./lib -c -o covrep.info
+      #- run: lcov -t "TESTS" -d ./build/lib -c -o ./build/covrep.info
+      - run: gcovr -r . -x -o ./build/gcovrrep.xml
       
       - name: Upload coverage report
-        #run: bash <(curl -s https://codecov.io/bash) -f covrep.info
         uses: codecov/codecov-action@v2
         with:
-          files: ./covrep.info
+          files: ./build/gcovrrep.xml
