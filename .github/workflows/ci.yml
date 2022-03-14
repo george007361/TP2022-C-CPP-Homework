@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install valgrind
         run: sudo apt update
-        run: sudo apt install -y valgrind
+      - run: sudo apt install -y valgrind
       - run: cmake -B build
       - run: make -C build
       - name: run valgrind
