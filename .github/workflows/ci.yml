@@ -27,4 +27,7 @@ jobs:
       - run: lcov -t "TESTS" -d ./lib -c -o covrep.info
       
       - name: Upload coverage report
-        run: bash <(curl -s https://codecov.io/bash) -f covrep.info
+        #run: bash <(curl -s https://codecov.io/bash) -f covrep.info
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./covrep.info
