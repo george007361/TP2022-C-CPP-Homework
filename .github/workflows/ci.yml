@@ -10,8 +10,10 @@ jobs:
         with:
           submodules: recursive
       
-      - name: Setup LCOV
-        uses: hrishikesh-kadam/setup-lcov@v1
+      #- name: Setup LCOV
+       # uses: hrishikesh-kadam/setup-lcov@v1
+      - name: Install gcov
+        run: sudo apt install -y gcovr 
       
       - name: Build Tests
         uses: actions/checkout@v2
