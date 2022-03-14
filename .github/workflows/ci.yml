@@ -10,16 +10,16 @@ jobs:
       
       - name: Build Tests
         uses: actions/checkout@v2
-        run: cmake -B build -DCOVERAGE=ON
-        run: make -C build
+      - run: cmake -B build -DCOVERAGE=ON
+      - run: make -C build
       
       - name: Run tests
         run: ./build/lib/functions/tests/test_functions
-        run: ./build/lib/restoraunt/tests/test_restoraunt
+      - run: ./build/lib/restoraunt/tests/test_restoraunt
       
       - name: Generate coverage report
         run: cd ./build
-        run: lcov -t "TESTS" -d ./lib -c -o covrep.info
+      - run: lcov -t "TESTS" -d ./lib -c -o covrep.info
       
       - name: Upload coverage report
         run: bash <(curl -s https://codecov.io/bash) -f covrep.info
