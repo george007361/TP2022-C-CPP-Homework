@@ -5,6 +5,11 @@ jobs:
     name: GTest and coverage
     runs-on: ubuntu-latest
     steps:
+      - name: checkout all the submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
       
