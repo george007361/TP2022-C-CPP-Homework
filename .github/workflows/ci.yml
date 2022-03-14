@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [GTest_and_cov]
     steps:
+      - uses: actions/checkout@v2
       - run: cmake -B build -DSANITIZERS=ON
       - run: make -C build
       - run: ./build/main <examples/ex1.txt 
@@ -56,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [Sanitizers]
     steps:
+      - uses: actions/checkout@v2
       - name: install valgrind
         run: sudo apt install valgrind
       - run: cmake -B build
@@ -68,6 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [Valgrind]
     steps:
+      - uses: actions/checkout@v2
       - name: Install linters
         run: chmod -x install_linters.sh 
       - run: sh install_linters.sh
@@ -88,6 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [Linters]
     steps:
+      - uses: actions/checkout@v2
       - name: Install scan-build
         run: sudo apt install -y clang-tools
       - name: Cmake
