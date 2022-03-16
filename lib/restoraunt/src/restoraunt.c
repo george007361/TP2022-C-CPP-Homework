@@ -3,19 +3,21 @@
 #include <string.h>
 
 int read_client(Client *client, FILE *stream) {
-  if (!client)
+  if (!client) {
     return EXIT_FAILURE;
-
-  if (!(client->name = read_str(stream)))
+  }
+  if (!(client->name = read_str(stream))) {
     return EXIT_FAILURE;
+  }
 
   int is_error = 0;
 
   client->receipt = read_int(&is_error, stream);
   client->table = read_int(&is_error, stream);
 
-  if (is_error)
+  if (is_error) {
     return EXIT_FAILURE;
+  }
 
   return strlen(client->name) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
@@ -26,8 +28,9 @@ Clients init_clients() {
 }
 
 int read_clients(Clients *clients, FILE *stream) {
-  if (!clients)
+  if (!clients) {
     return EXIT_FAILURE;
+  }
 
   printf("Format:\n-----\n#<Name>\n<Receipt>\n<Table>\n-----\n<Any symbol to "
          "exit>\n\n");
@@ -119,15 +122,18 @@ int partition(Clients *clients, int a, int n) {
 
 void quick_sort(Clients *clients, int a, int n) {
   int part = partition(clients, a, n);
-  if (part > 0)
+  if (part > 0) {
     quick_sort(clients, a, part);
-  if (part + 1 < n)
+  }
+  if (part + 1 < n) {
     quick_sort(clients, a + part + 1, n - (part + 1));
+  }
 }
 
 void quick_sort_by_table_clients(Clients *clients) {
-  if (!clients)
+  if (!clients) {
     return;
+  }
 
   quick_sort(clients, 0, clients->count);
 }

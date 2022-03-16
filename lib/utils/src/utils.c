@@ -1,6 +1,6 @@
-#include <string.h>
+#include "utils.h"
 
-#include "functions.h"
+#include <string.h>
 
 char read_char(FILE *stream) {
   char c;
@@ -18,8 +18,9 @@ int read_int(int *is_err, FILE *stream) {
       while ((c = getc(stream)) != '\n' && c != '\0' && c != EOF) {
       }
       fprintf(stderr, "Tried to read int, but it is not a number\n");
-      if (is_err)
+      if (is_err) {
         *is_err = 1;
+      }
       return 0;
     }
     is_empty = 0;
@@ -31,7 +32,7 @@ int read_int(int *is_err, FILE *stream) {
 }
 
 char *read_str(FILE *stream) {
-  buffer buf = {NULL, 0, 0};
+  buffer_t buf = {NULL, 0, 0};
   char c;
 
   while ((c = getc(stream)) != '\n' && c != '\0' && c != EOF) {

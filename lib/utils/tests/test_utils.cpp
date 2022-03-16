@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
+
 #include <stdio.h>
 #include <string.h>
 
 extern "C" {
-#include "functions.h"
+#include "utils.h"
 }
 
 int main(int argc, char **argv) {
@@ -11,7 +12,7 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
-TEST(test_read_char, one_char) {
+TEST(TestReadCharFunc, OneChar) {
   char *buf = "#";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -20,7 +21,7 @@ TEST(test_read_char, one_char) {
   fclose(f);
 }
 
-TEST(test_read_char, new_string_symb_in_input) {
+TEST(TestReadCharFunc, NewStringSymbInLine) {
   char *buf = "\n\n#\n";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -29,7 +30,7 @@ TEST(test_read_char, new_string_symb_in_input) {
   fclose(f);
 }
 
-TEST(test_read_char, empty_input) {
+TEST(TestReadCharFunc, EmptyInput) {
   char *buf = "\0";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -38,7 +39,7 @@ TEST(test_read_char, empty_input) {
   fclose(f);
 }
 
-TEST(test_read_char, new_string_symb_in_empty_input) {
+TEST(TestReadCharFunc, NewStringSymbInEmptyLine) {
   char *buf = "\n\n\n\0";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -47,52 +48,51 @@ TEST(test_read_char, new_string_symb_in_empty_input) {
   fclose(f);
 }
 
-TEST(test_read_int, no_err_normal_input) {
+TEST(TestReadIntFunc, NoErrors) {
   char *buf = "123";
-  puts(buf);
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
-  int is_err = 0;
+  int isErr = 0;
 
-  EXPECT_EQ(123, read_int(&is_err, f));
-  EXPECT_FALSE(is_err);
+  EXPECT_EQ(123, read_int(&isErr, f));
+  EXPECT_FALSE(isErr);
 
   fclose(f);
 }
 
-TEST(test_read_int, err_not_number_input) {
+TEST(TestReadIntFunc, ErrorNotNubmer) {
   char *buf = "12X3";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
-  int is_err = 0;
+  int isErr = 0;
 
-  EXPECT_EQ(0, read_int(&is_err, f));
-  EXPECT_TRUE(is_err);
+  EXPECT_EQ(0, read_int(&isErr, f));
+  EXPECT_TRUE(isErr);
 
   fclose(f);
 }
 
-TEST(test_read_int, err_empty_input) {
+TEST(TestReadIntFunc, ErrorEmptyInput) {
   char *buf = "\0";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
-  int is_err = 0;
+  int isErr = 0;
 
-  EXPECT_EQ(0, read_int(&is_err, f));
-  EXPECT_TRUE(is_err);
+  EXPECT_EQ(0, read_int(&isErr, f));
+  EXPECT_TRUE(isErr);
 
   fclose(f);
 }
 
-TEST(test_read_int, err_empty_strs_input) {
+TEST(TestReadIntFunc, ErrorOnlyNewLineSybs) {
   char *buf = "\n\n\n\n";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
-  int is_err = 0;
+  int isErr = 0;
 
-  EXPECT_EQ(0, read_int(&is_err, f));
-  EXPECT_TRUE(is_err);
+  EXPECT_EQ(0, read_int(&isErr, f));
+  EXPECT_TRUE(isErr);
 
   fclose(f);
 }
 
-TEST(test_read_str, noerr_input) {
+TEST(TestReadStrFunc, NoError) {
   char *buf = "Hello!";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -103,7 +103,7 @@ TEST(test_read_str, noerr_input) {
   fclose(f);
 }
 
-TEST(test_read_str, noerr_empty_str_input) {
+TEST(TestReadStrFunc, NoErrorEmptyInput) {
   char *buf = "";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 

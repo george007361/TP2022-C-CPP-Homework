@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,7 +12,7 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
-TEST(test_free_client, no_err_ptr) {
+TEST(TestFreeClientFunc, NoErrors) {
   Client cl = {(char *)malloc(sizeof(char)), 1, 2};
   free_client(&cl);
   EXPECT_FALSE(cl.name);
@@ -19,7 +20,7 @@ TEST(test_free_client, no_err_ptr) {
   EXPECT_EQ(-1, cl.table);
 }
 
-TEST(test_free_client, err_null_ptr) {
+TEST(TestFreeClientFunc, ErrorNullPtr) {
   Client cl = {NULL, 1, 2};
   free_client(&cl);
   EXPECT_FALSE(cl.name);
@@ -27,16 +28,16 @@ TEST(test_free_client, err_null_ptr) {
   EXPECT_EQ(-1, cl.table);
 }
 
-TEST(test_free_client, err_null_cl_ptr) { free_client(NULL); }
+TEST(TestFreeClientFunc, ErrorNullClientPtr) { free_client(NULL); }
 
-TEST(test_init_clients, init) {
+TEST(TestInitClientsFunc, NoErrors) {
   Clients cls = init_clients();
   EXPECT_FALSE(cls.arr);
   EXPECT_EQ(0, cls.capacity);
   EXPECT_EQ(0, cls.count);
 }
 
-TEST(test_read_clients, no_err) {
+TEST(TestReadClientsFunc, NoErrors) {
   char *buf = "#Name\n1\n2\n#Name2\n3\n4\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -58,7 +59,7 @@ TEST(test_read_clients, no_err) {
   fclose(f);
 }
 
-TEST(test_read_clients, err_invalid_data_name) {
+TEST(TestReadClientsFunc, ErrorWrongName) {
   char buf[] = "#\n1\n2\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -72,7 +73,7 @@ TEST(test_read_clients, err_invalid_data_name) {
   fclose(f);
 }
 
-TEST(test_read_clients, err_invalid_data_receipt) {
+TEST(TestReadClientsFunc, ErrorWrongReceipt) {
   char buf[] = "#Name\n\n\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -86,7 +87,7 @@ TEST(test_read_clients, err_invalid_data_receipt) {
   fclose(f);
 }
 
-TEST(test_read_clients, err_invalid_data_table) {
+TEST(TestReadClientsFunc, ErrorWrongTable) {
   char buf[] = "#Name\n1500\nLOL\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -100,7 +101,7 @@ TEST(test_read_clients, err_invalid_data_table) {
   fclose(f);
 }
 
-TEST(test_quick_sort_by_table_clients, no_err) {
+TEST(TestSortingFunc, NoError) {
   char buf[] = "#Third\n100\n3\n#First\n100\n1\n#Second\n100\n2\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
@@ -117,8 +118,6 @@ TEST(test_quick_sort_by_table_clients, no_err) {
   fclose(f);
 }
 
-TEST(test_quick_sort_by_table_clients, err_null_ptr) {
-  quick_sort_by_table_clients(NULL);
-}
+TEST(TestSortingFunc, ErrorNullPtr) { quick_sort_by_table_clients(NULL); }
 
-TEST(test_print_clients, err_null_ptr) { print_clietns(init_clients()); }
+TEST(TestPrintClientsFunc, ErrorNullPtr) { print_clietns(init_clients()); }
