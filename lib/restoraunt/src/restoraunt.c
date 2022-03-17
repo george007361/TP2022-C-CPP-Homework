@@ -3,9 +3,10 @@
 #include <string.h>
 
 int read_client(Client *client, FILE *stream) {
-  if (!client) {
+  if (!client || !stream) {
     return EXIT_FAILURE;
   }
+
   if (!(client->name = read_str(stream))) {
     return EXIT_FAILURE;
   }
@@ -24,11 +25,12 @@ int read_client(Client *client, FILE *stream) {
 
 Clients init_clients() {
   Clients cls = {NULL, 0, 0};
+
   return cls;
 }
 
 int read_clients(Clients *clients, FILE *stream) {
-  if (!clients) {
+  if (!clients || !stream) {
     return EXIT_FAILURE;
   }
 
@@ -37,6 +39,7 @@ int read_clients(Clients *clients, FILE *stream) {
 
   while (read_char(stream) == CLIENT_SEPARATOR) {
     Client new_client;
+
     if (read_client(&new_client, stream) == EXIT_FAILURE) {
       fprintf(stderr, "Can't read client №%li\n", clients->count + 1);
 
@@ -59,8 +62,10 @@ int read_clients(Clients *clients, FILE *stream) {
 
         return EXIT_FAILURE;
       }
+
       clients->arr = pnew_arr;
     }
+
     clients->arr[clients->count++] = new_client;
   }
 
@@ -73,6 +78,7 @@ void free_client(Client *client) {
       free(client->name);
       client->name = NULL;
     }
+
     client->receipt = client->table = -1;
   }
 }
@@ -92,13 +98,18 @@ void free_clients(Clients *clients) {
   }
 }
 
-void swap_clients(Clients *clients, int a, int b) {
+void swap_clients(Clients *clients, const int a, const int b) {
+  if (!clients) {
+    fprintf(stderr, "Clients ptr is empty\n");
+    return;
+  }
+
   Client tmp = clients->arr[a];
   clients->arr[a] = clients->arr[b];
   clients->arr[b] = tmp;
 }
 
-int partition(Clients *clients, int a, int n) {
+int partition(Clients *clients, const int a, const int n) {
   if (n <= 1) {
     return 0;
   }
@@ -116,11 +127,13 @@ int partition(Clients *clients, int a, int n) {
       j++;
     }
   }
+
   swap_clients(clients, a + i, a + n - 1);
+
   return i;
 }
 
-void quick_sort(Clients *clients, int a, int n) {
+void quick_sort(Clients *clients, const int a, const int n) {
   int part = partition(clients, a, n);
   if (part > 0) {
     quick_sort(clients, a, part);

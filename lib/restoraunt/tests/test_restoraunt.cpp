@@ -14,7 +14,9 @@ int main(int argc, char **argv) {
 
 TEST(TestFreeClientFunc, NoErrors) {
   Client cl = {(char *)malloc(sizeof(char)), 1, 2};
+
   free_client(&cl);
+  
   EXPECT_FALSE(cl.name);
   EXPECT_EQ(-1, cl.receipt);
   EXPECT_EQ(-1, cl.table);
@@ -22,7 +24,9 @@ TEST(TestFreeClientFunc, NoErrors) {
 
 TEST(TestFreeClientFunc, ErrorNullPtr) {
   Client cl = {NULL, 1, 2};
+
   free_client(&cl);
+  
   EXPECT_FALSE(cl.name);
   EXPECT_EQ(-1, cl.receipt);
   EXPECT_EQ(-1, cl.table);
@@ -32,6 +36,7 @@ TEST(TestFreeClientFunc, ErrorNullClientPtr) { free_client(NULL); }
 
 TEST(TestInitClientsFunc, NoErrors) {
   Clients cls = init_clients();
+  
   EXPECT_FALSE(cls.arr);
   EXPECT_EQ(0, cls.capacity);
   EXPECT_EQ(0, cls.count);

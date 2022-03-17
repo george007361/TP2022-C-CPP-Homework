@@ -103,5 +103,3 @@ jobs:
         run: cmake -B build
       - name: Scan-Build
         run: scan-build make -C build
-
-

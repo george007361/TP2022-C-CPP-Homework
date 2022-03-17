@@ -8,6 +8,7 @@ int main() {
   Clients clients = init_clients();
   if (read_clients(&clients, stdin)) {
     printf("Some issues while reading clients..\n");
+
     return EXIT_FAILURE;
   }
 

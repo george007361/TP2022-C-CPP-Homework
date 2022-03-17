@@ -12,6 +12,8 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
+TEST(TestReadCharFunc, NullPtr) { EXPECT_EQ('\0', read_char(nullptr)); }
+
 TEST(TestReadCharFunc, OneChar) {
   char *buf = "#";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
@@ -46,6 +48,10 @@ TEST(TestReadCharFunc, NewStringSymbInEmptyLine) {
   EXPECT_EQ('\0', read_char(f));
 
   fclose(f);
+}
+
+TEST(TestReadIntFunc, ErrorNullPtr) {
+  EXPECT_EQ(0, read_int(nullptr, nullptr));
 }
 
 TEST(TestReadIntFunc, NoErrors) {
@@ -92,12 +98,17 @@ TEST(TestReadIntFunc, ErrorOnlyNewLineSybs) {
   fclose(f);
 }
 
+TEST(TestReadStrFunc, ErrorNullPtr) {
+  EXPECT_EQ(NULL, read_str(nullptr));
+}
+
 TEST(TestReadStrFunc, NoError) {
   char *buf = "Hello!";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
   char *res = read_str(f);
   EXPECT_TRUE(!strcmp("Hello!", res));
+
   if (res)
     free(res);
   fclose(f);
@@ -109,6 +120,7 @@ TEST(TestReadStrFunc, NoErrorEmptyInput) {
 
   char *res = read_str(f);
   EXPECT_TRUE(!strcmp("", res));
+
   if (res)
     free(res);
   fclose(f);

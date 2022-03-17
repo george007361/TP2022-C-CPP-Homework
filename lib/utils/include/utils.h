@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 #define CHUNK_SIZE 32
+#define END_OF_FILE '\0'
+#define END_OF_STRING '\n'
 
 typedef struct buffer {
   char *buff;
