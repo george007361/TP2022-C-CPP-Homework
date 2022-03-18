@@ -2,7 +2,26 @@
 
 #include <string.h>
 
-int read_client(Client *client, FILE *stream) {
+int restoraunt_work() {
+  // init
+  clients clients = init_clients();
+  if (read_clients(&clients, stdin)) {
+    printf("Some issues while reading clients..\n");
+
+    return EXIT_FAILURE;
+  }
+
+  // job
+  quick_sort_by_table_clients(&clients);
+  print_clietns(clients);
+
+  // free
+  free_clients(&clients);
+
+  return EXIT_SUCCESS;
+}
+
+int read_client(client *client, FILE *stream) {
   if (!client || !stream) {
     return EXIT_FAILURE;
   }
@@ -23,13 +42,13 @@ int read_client(Client *client, FILE *stream) {
   return strlen(client->name) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-Clients init_clients() {
-  Clients cls = {NULL, 0, 0};
+clients init_clients() {
+  clients cls = {NULL, 0, 0};
 
   return cls;
 }
 
-int read_clients(Clients *clients, FILE *stream) {
+int read_clients(clients *clients, FILE *stream) {
   if (!clients || !stream) {
     return EXIT_FAILURE;
   }
@@ -38,7 +57,7 @@ int read_clients(Clients *clients, FILE *stream) {
          "exit>\n\n");
 
   while (read_char(stream) == CLIENT_SEPARATOR) {
-    Client new_client;
+    client new_client;
 
     if (read_client(&new_client, stream) == EXIT_FAILURE) {
       fprintf(stderr, "Can't read client №%li\n", clients->count + 1);
@@ -50,11 +69,14 @@ int read_clients(Clients *clients, FILE *stream) {
     }
 
     if (clients->capacity == clients->count) {
-      Client *pnew_arr = (Client *)realloc(
-          clients->arr,
-          sizeof(Client) * (clients->capacity = clients->capacity
-                                                    ? clients->capacity *= 2
-                                                    : 1));
+      if (clients->capacity) {
+        clients->capacity *= 2;
+      } else {
+        clients->capacity = 1;
+      }
+
+      client *pnew_arr =
+          (client *)realloc(clients->arr, sizeof(client) * clients->capacity);
       if (!pnew_arr) {
         fprintf(stderr, "Realloc error: read_clients()\n");
 
@@ -72,7 +94,7 @@ int read_clients(Clients *clients, FILE *stream) {
   return EXIT_SUCCESS;
 }
 
-void free_client(Client *client) {
+void free_client(client *client) {
   if (client) {
     if (client->name) {
       free(client->name);
@@ -83,7 +105,7 @@ void free_client(Client *client) {
   }
 }
 
-void free_clients(Clients *clients) {
+void free_clients(clients *clients) {
   if (clients) {
     if (clients->arr) {
       for (size_t i = 0; i < clients->count; i++) {
@@ -98,18 +120,18 @@ void free_clients(Clients *clients) {
   }
 }
 
-void swap_clients(Clients *clients, const int a, const int b) {
+void swap_clients(clients *clients, const int a, const int b) {
   if (!clients) {
-    fprintf(stderr, "Clients ptr is empty\n");
+    fprintf(stderr, "clients ptr is empty\n");
     return;
   }
 
-  Client tmp = clients->arr[a];
+  client tmp = clients->arr[a];
   clients->arr[a] = clients->arr[b];
   clients->arr[b] = tmp;
 }
 
-int partition(Clients *clients, const int a, const int n) {
+int partition(clients *clients, const int a, const int n) {
   if (n <= 1) {
     return 0;
   }
@@ -133,7 +155,7 @@ int partition(Clients *clients, const int a, const int n) {
   return i;
 }
 
-void quick_sort(Clients *clients, const int a, const int n) {
+void quick_sort(clients *clients, const int a, const int n) {
   int part = partition(clients, a, n);
   if (part > 0) {
     quick_sort(clients, a, part);
@@ -143,7 +165,7 @@ void quick_sort(Clients *clients, const int a, const int n) {
   }
 }
 
-void quick_sort_by_table_clients(Clients *clients) {
+void quick_sort_by_table_clients(clients *clients) {
   if (!clients) {
     return;
   }
@@ -151,7 +173,7 @@ void quick_sort_by_table_clients(Clients *clients) {
   quick_sort(clients, 0, clients->count);
 }
 
-void print_clietns(const Clients clients) {
+void print_clietns(const clients clients) {
   if (clients.arr == NULL) {
     fprintf(stderr, "Print_client(): error NULL array\n");
     return;

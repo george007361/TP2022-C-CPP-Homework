@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 }
 
 TEST(TestFreeClientFunc, NoErrors) {
-  Client cl = {(char *)malloc(sizeof(char)), 1, 2};
+  client cl = {(char *)malloc(sizeof(char)), 1, 2};
 
   free_client(&cl);
   
@@ -23,7 +23,7 @@ TEST(TestFreeClientFunc, NoErrors) {
 }
 
 TEST(TestFreeClientFunc, ErrorNullPtr) {
-  Client cl = {NULL, 1, 2};
+  client cl = {NULL, 1, 2};
 
   free_client(&cl);
   
@@ -35,7 +35,7 @@ TEST(TestFreeClientFunc, ErrorNullPtr) {
 TEST(TestFreeClientFunc, ErrorNullClientPtr) { free_client(NULL); }
 
 TEST(TestInitClientsFunc, NoErrors) {
-  Clients cls = init_clients();
+  clients cls = init_clients();
   
   EXPECT_FALSE(cls.arr);
   EXPECT_EQ(0, cls.capacity);
@@ -46,7 +46,7 @@ TEST(TestReadClientsFunc, NoErrors) {
   char *buf = "#Name\n1\n2\n#Name2\n3\n4\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
-  Clients clients = init_clients();
+  clients clients = init_clients();
 
   EXPECT_EQ(EXIT_SUCCESS, read_clients(&clients, f));
   ASSERT_TRUE(clients.arr);
@@ -68,7 +68,7 @@ TEST(TestReadClientsFunc, ErrorWrongName) {
   char buf[] = "#\n1\n2\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
-  Clients clients = init_clients();
+  clients clients = init_clients();
 
   EXPECT_EQ(EXIT_FAILURE, read_clients(&clients, f));
   ASSERT_FALSE(clients.arr);
@@ -82,7 +82,7 @@ TEST(TestReadClientsFunc, ErrorWrongReceipt) {
   char buf[] = "#Name\n\n\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
-  Clients clients = init_clients();
+  clients clients = init_clients();
 
   EXPECT_EQ(EXIT_FAILURE, read_clients(&clients, f));
   ASSERT_FALSE(clients.arr);
@@ -96,7 +96,7 @@ TEST(TestReadClientsFunc, ErrorWrongTable) {
   char buf[] = "#Name\n1500\nLOL\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
-  Clients clients = init_clients();
+  clients clients = init_clients();
 
   EXPECT_EQ(EXIT_FAILURE, read_clients(&clients, f));
   ASSERT_FALSE(clients.arr);
@@ -110,7 +110,7 @@ TEST(TestSortingFunc, NoError) {
   char buf[] = "#Third\n100\n3\n#First\n100\n1\n#Second\n100\n2\n/";
   FILE *f = fmemopen(buf, strlen(buf) + 1, "r");
 
-  Clients clients = init_clients();
+  clients clients = init_clients();
 
   EXPECT_EQ(EXIT_SUCCESS, read_clients(&clients, f));
   quick_sort_by_table_clients(&clients);
