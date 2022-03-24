@@ -1,18 +1,5 @@
 #include "utils.h"
 
-int *init_array(size_t *size) {
-  if (!size) {
-    fprintf(stderr, "init_array() : %s\n", NULL_PTR_PARAM_ERR_MSG);
-
-    return NULL;
-  }
-
-  int *arr = NULL;
-  *size = 0;
-
-  return arr;
-}
-
 int free_array(int **arr, size_t *size) {
   if (!arr || !size) {
     fprintf(stderr, "free_array() : %s\n", NULL_PTR_PARAM_ERR_MSG);
@@ -52,6 +39,7 @@ int read_array_from_file(int **arr, size_t *size, FILE *file) {
 
     return ERROR_NULL_PTR_PARAM;
   }
+  free_array(arr, size);
 
   if (ferror(file)) {
     fprintf(stderr, "read_array_from_file() : %s\n", FILE_ERROR_ERR_MSG);
@@ -62,8 +50,6 @@ int read_array_from_file(int **arr, size_t *size, FILE *file) {
   if (feof(file)) {
     return SUCCESS_ALL_DATA;
   }
-
-  free_array(arr, size);
 
   int exit_code = SUCCESS_NOT_ALL_DATA;
   const size_t max_size = BUFF_SIZE_BYTES / sizeof(int);

@@ -18,14 +18,14 @@ int run_task(const int argc, char *const argv[]) {
   }
 
   // Do job
-  max_delta_t max_delta = {0};
+  delta_temperature_t max_delta = init_delta_temp();
   if (find_max_temperature_delta_in_file(&max_delta, file) == EXIT_FAILURE) {
     free(filepath);
     fclose(file);
 
     return EXIT_FAILURE;
   }
-  printf("%i %lu\n", max_delta.delta, max_delta.index);
+  printf("%i %lld\n", max_delta.delta, max_delta.index);
 
   // Clear resources
   fclose(file);
@@ -88,40 +88,42 @@ int read_arguments(char **filepath, const int argc, char *const argv[]) {
   return SUCCESS;
 }
 
-int find_max_temperature_delta_in_file(max_delta_t *found_max_delta,
+int find_max_temperature_delta_in_file(delta_temperature_t *found_max_delta,
                                        FILE *file) {
   if (!file || !found_max_delta) {
     return EXIT_FAILURE;
   }
 
-  max_delta_t max_delta = {0};
-
-  size_t size = 0;
-  int *arr = init_array(&size);
+  delta_temperature_t max_delta_temp = init_delta_temp();
+  part_t part = init_part(0, NULL, 0, 0, -1, &max_delta_temp);
 
   int flag = SUCCESS_NOT_ALL_DATA;
 
   while (flag == SUCCESS_NOT_ALL_DATA) {
-    flag = read_array_from_file(&arr, &size, file);
-
+    flag = read_array_from_file(&part.arr, &part.len, file);
+    if (part.len < 1) {
+      break;
+    }
     if (flag != SUCCESS_ALL_DATA && flag != SUCCESS_NOT_ALL_DATA) {
       fprintf(stderr, "Error reading array from file\n");
-      free_array(&arr, &size);
+      free_array(&part.arr, &part.len);
 
       return EXIT_FAILURE;
     }
 
-    if (find_max_temperature_delta_in_array(&max_delta, arr, size) ==
-        EXIT_FAILURE) {
-      free_array(&arr, &size);
+    if (find_max_temperature_delta_in_array(&part) == EXIT_FAILURE) {
+      free_array(&part.arr, &part.len);
 
       return EXIT_FAILURE;
     }
+    part.prev_elem_index = part.offset + part.len - 1;
+
+    part.prev_elem = part.arr[part.prev_elem_index];
+    part.offset += part.len;
   }
 
-  free_array(&arr, &size);
+  free_array(&part.arr, &part.len);
 
-  *found_max_delta = max_delta;
-
+  *found_max_delta = max_delta_temp;
   return EXIT_SUCCESS;
 }

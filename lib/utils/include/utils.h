@@ -8,7 +8,7 @@
 
 // #define BUFF_SIZE_MB 100
 // #define BUFF_SIZE_BYTES (BUFF_SIZE_MB * 1048576)
-#define BUFF_SIZE_BYTES 16
+#define BUFF_SIZE_BYTES 32
 
 #define NULL_PTR_PARAM_ERR_MSG                                                 \
   "Some params given to func as address are null ptr "
@@ -34,6 +34,5 @@ enum return_codes {
 int open_file(FILE **file, const char *filepath);
 int free_array(int **arr, size_t *size);
 int read_array_from_file(int **arr, size_t *size, FILE *file);
-int *init_array(size_t *size);
 
 #endif // LIB_UTILS_INCLUDE_UTILS_H_

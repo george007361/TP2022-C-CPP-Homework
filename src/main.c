@@ -4,6 +4,8 @@
 #include "task.h"
 #include "utils.h"
 
+#include <unistd.h>
+
 #define RUN_TASK_ERR_MSG "While running task, error occured\n"
 
 int main(int argc, char *argv[]) {

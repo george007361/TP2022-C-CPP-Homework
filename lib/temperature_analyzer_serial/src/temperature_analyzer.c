@@ -1,32 +1,46 @@
 #include "temperature_analyzer.h"
 
-int find_max_temperature_delta_in_array(max_delta_t *max_delta,
-                                        const int *const arr,
-                                        const size_t size) {
-  if (!max_delta || !arr) {
+delta_temperature_t init_delta_temp() {
+  // int delta;
+  // size_t index;
+
+  delta_temperature_t dt = {0, -1};
+
+  return dt;
+}
+
+part_t init_part(size_t offset, int *arr, size_t len, int prev_elem,
+                 long long prev_elem_index,
+                 delta_temperature_t *max_delta_temperature) {
+  part_t part = {
+      offset, arr, len, prev_elem, prev_elem_index, max_delta_temperature};
+
+  return part;
+}
+
+int find_max_temperature_delta_in_array(part_t *part) {
+  if (!part || !part->arr) {
     return EXIT_FAILURE;
   }
-
   // Check prev last elem
-  if (max_delta->last_index) {
-    if (arr[0] - max_delta->last_number > max_delta->delta) {
-      max_delta->delta = arr[0] - max_delta->last_number;
-      max_delta->index = max_delta->last_index;
+  if (part->prev_elem_index != -1) {
+    if (part->arr[0] - part->prev_elem > part->max_delta_temperature->delta) {
+      part->max_delta_temperature->delta = part->arr[0] - part->prev_elem;
+      part->max_delta_temperature->index = part->prev_elem_index;
     }
   }
 
   // Check elems in this part
-  for (size_t i = 0; i < size - 1; i++) {
-    if (arr[i + 1] - arr[i] > max_delta->delta) {
-      max_delta->delta = arr[i + 1] - arr[i];
-      max_delta->index = max_delta->offset + i;
+  for (size_t i = 0; i < part->len - 1; i++) {
+    if (part->arr[i + 1] - part->arr[i] > part->max_delta_temperature->delta) {
+      part->max_delta_temperature->delta = part->arr[i + 1] - part->arr[i];
+      part->max_delta_temperature->index = part->offset + i;
     }
   }
 
   // Remember last elem and change offset
-  max_delta->last_index = max_delta->offset + size - 1;
-  max_delta->last_number = arr[size - 1];
-  max_delta->offset += size;
+  part->prev_elem_index = part->offset + part->len - 1;
+  part->prev_elem = part->arr[part->len - 1];
 
   return EXIT_SUCCESS;
 }

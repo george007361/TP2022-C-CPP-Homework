@@ -13,7 +13,7 @@
 int run_task(const int argc, char *const argv[]);
 int read_arguments(char **filepath, const int argc, char *const argv[]);
 void usage();
-int find_max_temperature_delta_in_file(max_delta_t *found_max_delta,
+int find_max_temperature_delta_in_file(delta_temperature_t *found_max_delta,
                                        FILE *file);
 
 #endif // LIB_TASK_INCLUDE_TASK_H_
