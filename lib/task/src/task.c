@@ -56,15 +56,11 @@ int read_arguments(char **filepath, const int argc, char *const argv[]) {
 
   struct option options[] = {{"help", no_argument, NULL, 'h'},
                              {"file", required_argument, NULL, 'f'},
-                             {"test", required_argument, NULL, 't'},
                              {NULL, 0, NULL, 0}};
 
   while ((option_symbol = getopt_long_only(argc, argv, "", options, NULL)) !=
          -1) {
     switch (option_symbol) {
-    case 't': {
-      break;
-    }
     case 'f': {
       *filepath = realpath(optarg, NULL);
       if (*filepath == NULL) {
@@ -116,9 +112,9 @@ int find_max_temperature_delta_in_file(delta_temperature_t *found_max_delta,
 
       return EXIT_FAILURE;
     }
-    part.prev_elem_index = part.offset + part.len - 1;
 
-    part.prev_elem = part.arr[part.prev_elem_index];
+    part.prev_elem_index = part.offset + part.len - 1;
+    part.prev_elem = part.arr[part.len - 1];
     part.offset += part.len;
   }
 

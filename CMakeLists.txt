@@ -11,10 +11,18 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options(-Wall -Wextra -pedantic -fPIC)
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread  -lpthread")
 
-add_subdirectory(lib/temperature_analyzer_parallel)
-# add_subdirectory(lib/temperature_analyzer_serial)
+option(USE_SERIAL "User serial analyzer (def ON)" OFF)
+
+if(USE_SERIAL)
+    message("-> Using serial")
+    add_subdirectory(lib/temperature_analyzer_serial)
+else()
+    message("-> Using parallel")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread  -lpthread")
+    add_subdirectory(lib/temperature_analyzer_parallel)
+endif()
+
 add_subdirectory(lib/task)
 add_subdirectory(lib/utils)
 

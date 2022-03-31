@@ -1,4 +1,6 @@
 #include "temperature_analyzer.h"
+// Parallel
+#include "stdio.h"
 
 delta_temperature_t init_delta_temp() {
   // int delta;
@@ -57,10 +59,11 @@ void *find_max_temperature_delta_in_thread(void *arg) { // arg = part
     thread_part->max_delta_temperature->delta = local_max.delta;
     thread_part->max_delta_temperature->index = local_max.index;
   }
+    //  printf("Thread |size = %lu| %lu %i %lu %i %lu\n", thread_part->len, thread_part->offset,
+    //  thread_part->max_delta_temperature->delta,thread_part->max_delta_temperature->index, local_max.delta, local_max.index);
   pthread_mutex_unlock(&thread_part->max_delta_temperature->mutex);
 
-  //  return EXIT_SUCCESS;
-  return NULL;
+   return (int)EXIT_SUCCESS;
 }
 
 int find_max_temperature_delta_in_array(part_t *part) {

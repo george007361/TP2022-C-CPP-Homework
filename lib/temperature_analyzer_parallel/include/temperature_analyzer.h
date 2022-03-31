@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define MB_PER_THREAD 20
+#define MB_PER_THREAD 50
 #define BYTES_IN_MB (1024 * 1024)
-#define ELEMENTS_PER_THREAD 4 // (MB_PER_THREAD * BYTES_IN_MB / sizeof(int))
+#define ELEMENTS_PER_THREAD (MB_PER_THREAD * BYTES_IN_MB / sizeof(int))
 
 typedef struct {
   int delta;

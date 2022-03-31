@@ -1,4 +1,5 @@
 #include "temperature_analyzer.h"
+// Serial
 
 delta_temperature_t init_delta_temp() {
   // int delta;
