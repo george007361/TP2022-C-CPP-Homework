@@ -2,16 +2,13 @@
 // Serial
 
 delta_temperature_t init_delta_temp() {
-  // int delta;
-  // size_t index;
-
   delta_temperature_t dt = {0, -1};
 
   return dt;
 }
 
-part_t init_part(size_t offset, int *arr, size_t len, int prev_elem,
-                 long long prev_elem_index,
+part_t init_part(long offset, int *arr, size_t len, int prev_elem,
+                 long prev_elem_index,
                  delta_temperature_t *max_delta_temperature) {
   part_t part = {
       offset, arr, len, prev_elem, prev_elem_index, max_delta_temperature};

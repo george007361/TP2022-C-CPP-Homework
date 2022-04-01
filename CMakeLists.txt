@@ -28,4 +28,3 @@ add_subdirectory(lib/utils)
 
 add_executable(main src/main.c)
 target_link_libraries(main utils task)
-

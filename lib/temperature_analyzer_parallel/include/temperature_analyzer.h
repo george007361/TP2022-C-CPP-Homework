@@ -9,19 +9,33 @@
 #define BYTES_IN_MB (1024 * 1024)
 #define ELEMENTS_PER_THREAD (MB_PER_THREAD * BYTES_IN_MB / sizeof(int))
 
+#ifndef SHARED_ERR_MSG
+#define SHARED_ERR_MSG
+
+#define NULL_PTR_PARAM_ERR_MSG                                                 \
+  "Some params given to func as address are null ptr \n"
+#define CANT_MALLOC_ERR_MSG "Cant malloc memory\n"
+
+#endif
+
+#define CHECK_PREV_ERR_MSG "check_prev_elem() error occured\n"
+#define PTHREAD_CREATE_ERR_MSG "Pthread create error occured\n"
+#define PTHREAD_JOIN_ERR_MSG "Pthread join error occured\n"
+#define PTHREAD_EXIT_FAILURE_ERR_MSG "Analysing part in thread error occured"
+
 typedef struct {
   int delta;
-  long long index;
+  long index;
   pthread_mutex_t mutex;
 } delta_temperature_t;
 
 typedef struct {
-  size_t offset;
+  long offset;
   int *arr;
   size_t len;
 
   int prev_elem;
-  long long prev_elem_index;
+  long prev_elem_index;
 
   delta_temperature_t *max_delta_temperature;
 } part_t;
@@ -29,12 +43,11 @@ typedef struct {
 typedef struct {
   pthread_t thd;
   part_t part;
-  int exit_code;
 } thread_part_t;
 
 delta_temperature_t init_delta_temp();
-part_t init_part(size_t offset, int *arr, size_t len, int prev_elem,
-                 long long prev_elem_index,
+part_t init_part(long offset, int *arr, size_t len, int prev_elem,
+                 long prev_elem_index,
                  delta_temperature_t *max_delta_temperature);
 int find_max_temperature_delta_in_array(part_t *part);
 

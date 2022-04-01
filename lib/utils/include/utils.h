@@ -10,12 +10,17 @@
 #define BUFF_SIZE_BYTES (BUFF_SIZE_MB * 1024 * 1024)
 // #define BUFF_SIZE_BYTES 32
 
+#ifndef SHARED_ERR_MSG
+#define SHARED_ERR_MSG
+
 #define NULL_PTR_PARAM_ERR_MSG                                                 \
   "Some params given to func as address are null ptr "
 #define CANT_OPEN_FILE_ERR_MSG "Cant open file"
 #define FILE_ERROR_ERR_MSG "File error"
 #define CANT_MALLOC_ERR_MSG "Cant malloc memory"
 #define CANT_REALLOC_ERR_MSG "Cant realloc memory"
+
+#endif
 
 enum return_codes {
   SUCCESS,

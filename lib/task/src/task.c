@@ -25,7 +25,7 @@ int run_task(const int argc, char *const argv[]) {
 
     return EXIT_FAILURE;
   }
-  printf("%i %lld\n", max_delta.delta, max_delta.index);
+  printf("%i %ld\n", max_delta.delta, max_delta.index);
 
   // Clear resources
   fclose(file);
