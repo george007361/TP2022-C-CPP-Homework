@@ -10,6 +10,8 @@
 #include "temperature_analyzer.h"
 #include "utils.h"
 
+#define ARGS_ERR "Arguments in run_task() invalid\n"
+
 int run_task(const int argc, char *const argv[]);
 int read_arguments(char **filepath, const int argc, char *const argv[]);
 void usage();

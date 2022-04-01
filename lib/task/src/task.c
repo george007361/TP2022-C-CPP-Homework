@@ -1,6 +1,11 @@
 #include "task.h"
 
 int run_task(const int argc, char *const argv[]) {
+  if (!argv) {
+    fprintf(stderr, ARGS_ERR);
+    return EXIT_FAILURE;
+  }
+
   char *filepath = NULL;
 
   // Read command line args

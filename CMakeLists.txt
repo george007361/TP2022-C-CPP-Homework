@@ -23,6 +23,71 @@ else()
     add_subdirectory(lib/temperature_analyzer_parallel)
 endif()
 
+
+set(BUILD_TESTS OFF)
+option(TEST_UTILS "Test utils.c" OFF)
+option(TEST_TASK "Test task.c" OFF)
+option(TEST_ANALYZER "Test temperature_analyzer.c" OFF)
+option(TEST_ALL "Test all" OFF)
+
+option(COVERAGE "Generate coverage files" OFF)
+
+option(SANITIZERS "Use sanitizers" OFF)
+
+# SANITIZERS
+
+if(SANITIZERS)
+    message("->Sanitizers flag ON")
+    add_compile_options(-fno-omit-frame-pointer -g -fsanitize=address,undefined -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error)
+    add_link_options(-fsanitize=address)
+endif(SANITIZERS)
+
+# END SANITIZERS
+
+# COVERAGE
+
+if(COVERAGE)
+    message("->Coverage flag ON")
+    set(TEST_ALL ON)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
+endif(COVERAGE)
+
+# END COVERAGE
+
+# TESTS
+
+if(TEST_ALL)
+    message("->Test all flag ON")
+    set(TEST_UTILS ON)
+    set(TEST_TASK ON)
+    set(TEST_ANALYZER ON)
+endif(TEST_ALL)
+
+if(TEST_TASK)
+    message("->Test task lib flag ON")
+    set(BUILD_TESTS ON)
+endif(TEST_TASK)
+
+if(TEST_ANALYZER)
+    message("->Test analyzer lib flag ON")
+    set(BUILD_TESTS ON)
+endif(TEST_ANALYZER)
+
+if(TEST_UTILS)
+    message("->Test utils lib flag ON")
+    set(BUILD_TESTS ON)
+endif(TEST_UTILS)
+
+if(BUILD_TESTS)
+    message("->Build tests flag ON")
+    add_subdirectory(./gtest)
+    enable_testing()
+    include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+endif(BUILD_TESTS)
+
+# END TESTS
+
 add_subdirectory(lib/task)
 add_subdirectory(lib/utils)
 

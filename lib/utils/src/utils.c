@@ -19,13 +19,12 @@ int open_file(FILE **file, const char *filepath) {
   if (!file || !filepath) {
     fprintf(stderr, "open_file() : %s\n", NULL_PTR_PARAM_ERR_MSG);
 
-    return EXIT_FAILURE;
+    return ERROR_NULL_PTR_PARAM;
   }
 
   *file = fopen(filepath, "r");
   if (!*file) {
-    fprintf(stderr, "open_file() : %s %s %s\n", CANT_OPEN_FILE_ERR_MSG,
-            filepath, strerror(errno));
+    fprintf(stderr, CANT_OPEN_FILE_ERR_MSG);
 
     return ERROR_CANT_OPEN_FILE;
   }
@@ -53,12 +52,13 @@ int read_array_from_file(int **arr, size_t *size, FILE *file) {
 
   int exit_code = SUCCESS_NOT_ALL_DATA;
   const size_t max_size = BUFF_SIZE_BYTES / sizeof(int);
-  *arr = (int *)malloc(BUFF_SIZE_BYTES);
-  if (!*arr) {
+  int *narr = (int *)malloc(BUFF_SIZE_BYTES);
+  if (!narr) {
     fprintf(stderr, "read_array_from_file() : %s\n", CANT_MALLOC_ERR_MSG);
 
     return ERROR_MALLOC;
   }
+  *arr = narr;
 
   for (*size = 0; *size < max_size; *size += 1) {
     if (fscanf(file, "%i", &(*arr)[*size]) != 1) {
