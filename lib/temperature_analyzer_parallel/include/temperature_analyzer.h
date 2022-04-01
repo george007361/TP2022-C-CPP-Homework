@@ -9,6 +9,9 @@
 #define BYTES_IN_MB (1024 * 1024)
 #define ELEMENTS_PER_THREAD (MB_PER_THREAD * BYTES_IN_MB / sizeof(int))
 
+#define THREAD_SUCCESS 3
+#define THREAD_FAIL 4
+
 #ifndef SHARED_ERR_MSG
 #define SHARED_ERR_MSG
 

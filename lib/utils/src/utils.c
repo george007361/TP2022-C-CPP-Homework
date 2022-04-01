@@ -52,13 +52,12 @@ int read_array_from_file(int **arr, size_t *size, FILE *file) {
 
   int exit_code = SUCCESS_NOT_ALL_DATA;
   const size_t max_size = BUFF_SIZE_BYTES / sizeof(int);
-  int *narr = (int *)malloc(BUFF_SIZE_BYTES);
-  if (!narr) {
+  *arr = (int *)malloc(BUFF_SIZE_BYTES);
+  if (!*arr) {
     fprintf(stderr, "read_array_from_file() : %s\n", CANT_MALLOC_ERR_MSG);
 
     return ERROR_MALLOC;
   }
-  *arr = narr;
 
   for (*size = 0; *size < max_size; *size += 1) {
     if (fscanf(file, "%i", &(*arr)[*size]) != 1) {
