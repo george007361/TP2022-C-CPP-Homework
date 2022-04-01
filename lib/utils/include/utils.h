@@ -6,9 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFF_SIZE_MB 400
+#define BUFF_SIZE_MB 200
 #define BUFF_SIZE_BYTES (BUFF_SIZE_MB * 1024 * 1024)
-// #define BUFF_SIZE_BYTES 32
 
 #ifndef SHARED_ERR_MSG
 #define SHARED_ERR_MSG

@@ -2,6 +2,8 @@
 #include <fstream>
 #include <getopt.h>
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -54,12 +56,13 @@ int main(int argc, char *argv[]) {
 
   ofstream dataFile;
 
-  dataFile.open(fname);
+  dataFile.open(fname, ios::in | ios::trunc);
   if (!dataFile.is_open()) {
 
     return EXIT_FAILURE;
   }
 
+  srand(time(NULL));
   for (size_t i = 0; i < COUNT_OF_NUBMERS; i++) {
     dataFile << rand() % DIAPOSONE - OFSSET << " ";
   }

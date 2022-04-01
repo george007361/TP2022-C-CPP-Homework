@@ -1,5 +1,7 @@
-#include "temperature_analyzer.h"
 // Serial
+#include "temperature_analyzer.h"
+
+#include <stdio.h>
 
 delta_temperature_t init_delta_temp() {
   delta_temperature_t dt = {0, -1};
@@ -17,9 +19,15 @@ part_t init_part(long offset, int *arr, size_t len, int prev_elem,
 }
 
 int find_max_temperature_delta_in_array(part_t *part) {
-  if (!part || !part->arr) {
+  if (!part) {
+    fprintf(stderr, NULL_PTR_PARAM_ERR_MSG);
     return EXIT_FAILURE;
   }
+  if (!part->arr || !part->max_delta_temperature) {
+    fprintf(stderr, NULL_PTR_PARAM_ERR_MSG);
+    return EXIT_FAILURE;
+  }
+
   // Check prev last elem
   if (part->prev_elem_index != -1) {
     if (part->arr[0] - part->prev_elem > part->max_delta_temperature->delta) {

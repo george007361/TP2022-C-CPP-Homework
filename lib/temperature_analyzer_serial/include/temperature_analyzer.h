@@ -3,6 +3,15 @@
 
 #include <stdlib.h>
 
+#ifndef SHARED_ERR_MSG
+#define SHARED_ERR_MSG
+
+#define NULL_PTR_PARAM_ERR_MSG                                                 \
+  "Some params given to func as address are null ptr \n"
+#define CANT_MALLOC_ERR_MSG "Cant malloc memory\n"
+
+#endif
+
 typedef struct {
   int delta;
   long index;

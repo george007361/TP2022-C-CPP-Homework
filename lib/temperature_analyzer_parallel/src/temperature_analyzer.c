@@ -90,7 +90,7 @@ int find_max_temperature_delta_in_array(part_t *part) {
   }
 
   int count_of_threads = sysconf(_SC_STREAM_MAX);
-  if (count_of_threads == -1) {
+  if (count_of_threads < 1) {
     fprintf(stderr, "%s", strerror(errno));
     return EXIT_FAILURE;
   }
@@ -104,7 +104,8 @@ int find_max_temperature_delta_in_array(part_t *part) {
   long thread_offset = 0;
 
   thread_part_t *thread_parts =
-      (thread_part_t *)malloc(sizeof(thread_part_t) * count_of_threads);
+      (thread_part_t *)malloc(count_of_threads * sizeof(thread_part_t));
+
   if (!thread_parts) {
     fprintf(stderr, CANT_MALLOC_ERR_MSG);
     return EXIT_FAILURE;

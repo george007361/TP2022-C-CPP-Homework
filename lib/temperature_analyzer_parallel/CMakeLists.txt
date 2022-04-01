@@ -1,4 +1,4 @@
-add_library(temperature_analyzer STATIC src/temperature_analyzer.c)
+add_library(temperature_analyzer SHARED src/temperature_analyzer.c)
 
 target_include_directories(temperature_analyzer PUBLIC include)
 
