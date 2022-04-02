@@ -130,8 +130,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: sudo apt install -y gcc
-      - run: chmod -x ./benchmark/run_benchmark.sh
-      - run: chmod -x ./benchmark/scripts/build.sh
-      - run: chmod -x ./benchmark/scripts/clear.sh
-      - run: cd ./benchmark
-      - run: sh run_benchmark.sh
+      - working-directory: ./benchmark
+      - run: chmod -x ./run_benchmark.sh
+      - run: chmod -x ./scripts/build.sh
+      - run: chmod -x ./scripts/clear.sh
+      - run: sh ./run_benchmark.sh
