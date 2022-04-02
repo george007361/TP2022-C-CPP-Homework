@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+echo Building serial...
+cmake -B buildserial -DUSE_SERIAL=ON
+make -C buildserial
+
+# echo Building parallel...
+# cmake -B buildparallel -DUSE_SERIAL=OFF
+# make -C buildparallel
+
+echo ClangTidy...
+echo ClangTidy serial...
+find -name "*.c" -o -name "*.h" | egrep -v "gtest|build*|parallel" | xargs clang-tidy-10 -p ./buildserial/compile_commands.json
+
+# echo ClangTidy parallel...
+# find -name "*.c" -o -name "*.h" | egrep -v "gtest|build*|serial" | xargs clang-tidy-10 -p ./buildparallel/compile_commands.json
+
+echo Cppcheck...
+find -name "*.c" -o -name "*.h" | egrep -v "gtest|build" | xargs cppcheck --enable=all --suppress=checkCastIntToCharAndBack --suppress=missingInclude --suppress=unmatchedSuppression
+
+echo Cpplint...
+find -name "*.c" -o -name "*.h" | egrep -v "gtest|build" | xargs python3 -m cpplint --filter=-build/include_order,-legal/copyright,-readability/casting,-build/include_subdir,-whitespace/comments,-runtime/int
+
+echo Clang-format...
+find -name "*.c" -o -name "*.h" | egrep -v "gtest|build" | xargs clang-format-10 -dry-run -style=LLVM
+
+echo Clearing dirs...
+rm -rf ./buildserial
+rm -rf ./buildparallel
