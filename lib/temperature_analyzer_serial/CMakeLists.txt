@@ -1,8 +1,8 @@
-add_library(temperature_analyzer STATIC src/temperature_analyzer.c)
+add_library(temperature_analyzer SHARED src/temperature_analyzer.c)
 
 target_include_directories(temperature_analyzer PUBLIC include)
 
-# Test utils
+# Test temp analyzer
 if(TEST_TEMPERATURE_ANALYZER)
     add_subdirectory(./tests)
-endif()
+endif(TEST_TEMPERATURE_ANALYZER)

@@ -14,20 +14,10 @@ add_compile_options(-Wall -Wextra -pedantic -fPIC)
 
 option(USE_SERIAL "User serial analyzer (def ON)" OFF)
 
-if(USE_SERIAL)
-    message("-> Using serial")
-    add_subdirectory(lib/temperature_analyzer_serial)
-else()
-    message("-> Using parallel")
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread  -lpthread")
-    add_subdirectory(lib/temperature_analyzer_parallel)
-endif()
-
-
 set(BUILD_TESTS OFF)
 option(TEST_UTILS "Test utils.c" OFF)
 option(TEST_TASK "Test task.c" OFF)
-option(TEST_ANALYZER "Test temperature_analyzer.c" OFF)
+option(TEST_TEMPERATURE_ANALYZER "Test temperature_analyzer.c" OFF)
 option(TEST_ALL "Test all" OFF)
 
 option(COVERAGE "Generate coverage files" OFF)
@@ -61,7 +51,7 @@ if(TEST_ALL)
     message("->Test all flag ON")
     set(TEST_UTILS ON)
     set(TEST_TASK ON)
-    set(TEST_ANALYZER ON)
+    set(TEST_TEMPERATURE_ANALYZER ON)
 endif(TEST_ALL)
 
 if(TEST_TASK)
@@ -69,10 +59,10 @@ if(TEST_TASK)
     set(BUILD_TESTS ON)
 endif(TEST_TASK)
 
-if(TEST_ANALYZER)
+if(TEST_TEMPERATURE_ANALYZER)
     message("->Test analyzer lib flag ON")
     set(BUILD_TESTS ON)
-endif(TEST_ANALYZER)
+endif(TEST_TEMPERATURE_ANALYZER)
 
 if(TEST_UTILS)
     message("->Test utils lib flag ON")
@@ -87,6 +77,15 @@ if(BUILD_TESTS)
 endif(BUILD_TESTS)
 
 # END TESTS
+
+if(USE_SERIAL)
+    message("-> Using serial")
+    add_subdirectory(lib/temperature_analyzer_serial)
+else()
+    message("-> Using parallel")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread  -lpthread")
+    add_subdirectory(lib/temperature_analyzer_parallel)
+endif()
 
 add_subdirectory(lib/task)
 add_subdirectory(lib/utils)

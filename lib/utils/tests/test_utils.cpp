@@ -1,8 +1,8 @@
-#include "gtest/gtest.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "gtest/gtest.h"
 
 extern "C" {
 #include "utils.h"
@@ -27,14 +27,12 @@ TEST(TestOpenFileFunc, NullPtrParam) {
   FILE *file;
   EXPECT_EQ(open_file(nullptr, "file"), ERROR_NULL_PTR_PARAM);
   EXPECT_EQ(open_file(&file, nullptr), ERROR_NULL_PTR_PARAM);
-//   fclose(file);
 }
 
 TEST(TestOpenFileFunc, NoSuchFile) {
   const char *fname = "./file.file";
   FILE *file;
   EXPECT_EQ(open_file(&file, fname), ERROR_CANT_OPEN_FILE);
-//   fclose(file);
 }
 
 TEST(TestFreeArrayFunc, NoErr) {

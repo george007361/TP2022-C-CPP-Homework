@@ -1,0 +1,140 @@
+name: HW2_CI
+on:
+  pull_request:
+  push:
+    branches:
+      - HW2_develop
+jobs:
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cmake -B buildserial -DUSE_SERIAL=ON
+      - run: make -C buildserial
+      - run: cmake -B buildparallel -DUSE_SERIAL=OFF
+      - run: make -C buildparallel
+
+  GTest_and_cov:
+    name: GTest and coverage
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - name: Checkout all the submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install gcov
+        run: sudo apt install -y gcovr
+
+      - name: Build Tests
+        uses: actions/checkout@v2
+      - run: cmake -B buildserial -DUSE_SERIAL=ON -DCOVERAGE=ON
+      - run: make -C buildserial
+      - run: cmake -B buildparallel -DUSE_SERIAL=OFF -DCOVERAGE=ON
+      - run: make -C buildparallel
+
+      - run: ./buildserial/lib/utils/tests/test_utils
+      - run: ./buildserial/lib/task/tests/test_task
+      - run: ./buildserial/lib/temperature_analyzer_serial/tests/test_temp_analyzer
+      - run: ./buildparallel/lib/utils/tests/test_utils
+      - run: ./buildparallel/lib/task/tests/test_task
+      - run: ./buildparallel/lib/temperature_analyzer_parallel/tests/test_temp_analyzer
+
+      - name: Generate coverage report serial
+        run: cd ./buildserial
+      - run: gcovr -r . -x -o ./buildserial/gcovrrepser.xml
+
+      - name: Upload coverage report serial
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: gcovrrepser.xml
+
+      - name: Generate coverage report parallel
+        run: cd ./buildparallel
+      - run: gcovr -r . -x -o ./buildparallel/gcovrreppar.xml
+
+      - name: Upload coverage report parallel
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: gcovrreppar.xml
+
+  Sanitizers:
+    name: With sanitizers
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: cmake -B buildserial -DSANITIZERS=ON -DUSE_SERIAL=ON
+      - run: make -C buildserial
+      - run: cmake -B buildparallel -DSANITIZERS=ON -DUSE_SERIAL=OFF
+      - run: make -C buildparallel
+      - name: Run sanitizers serial
+        run: ./buildserial/main --file ./examples/ex1.txt
+      - name: Run sanitizers parallel
+        run: ./buildparallel/main --file ./examples/ex1.txt
+
+  Valgrind:
+    name: With valgrind
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install valgrind
+        run: sudo apt update
+      - run: sudo apt install -y valgrind
+      - run: cmake -B buildserial -DSANITIZERS=OFF -DUSE_SERIAL=ON
+      - run: make -C buildserial
+      - run: cmake -B buildparallel -DSANITIZERS=OFF -DUSE_SERIAL=OFF
+      - run: make -C buildparallel
+      - name: Run valgrind serial
+        run: valgrind --leak-check=full --tool=memcheck ./buildserial/main --file examples/ex1.txt
+      - name: Run valgrind parallel
+        run: valgrind --leak-check=full --tool=memcheck ./buildparallel/main --file examples/ex1.txt
+
+  Linters:
+    name: With linters
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: chmod -x ./linters/install_linters.sh
+      - run: chmod -x ./linters/run_linters.sh
+      - name: Install linters
+        run: sh ./linters/install_linters.sh
+      - name: Run linters
+        run: sh ./linters/run_linters.sh
+
+  Scan_build:
+    name: With scan-build
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install scan-build
+        run: sudo apt install -y clang-tools
+      - run: cmake -B buildserial -DUSE_SERIAL=ON
+      - run: cmake -B buildparallel -DUSE_SERIAL=OFF
+      - name: Scan-Build serial
+        run: scan-build make -C buildserial
+      - name: Scan-Build parallel
+        run: scan-build make -C buildparallel
+
+  Stress_test:
+    name: Stress test
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install -y gcc
+      - working-directory: ./benchmark
+        run: chmod -x ./run_benchmark.sh
+      - working-directory: ./benchmark
+        run: chmod -x ./scripts/build.sh
+      - working-directory: ./benchmark
+        run: chmod -x ./scripts/clear.sh
+      - working-directory: ./benchmark
+        run: sh ./run_benchmark.sh

@@ -48,12 +48,12 @@ void *find_max_temperature_delta_in_thread(void *arg) { // arg = part
 
   if (!thread_part) {
     fprintf(stderr, NULL_PTR_PARAM_ERR_MSG);
-    return((void *)THREAD_FAIL);
+    return ((void *)THREAD_FAIL);
   }
 
   if (!thread_part->arr) {
     fprintf(stderr, NULL_PTR_PARAM_ERR_MSG);
-    return((void *)THREAD_FAIL);
+    return ((void *)THREAD_FAIL);
   }
 
   delta_temperature_t local_max = init_delta_temp();
@@ -70,7 +70,7 @@ void *find_max_temperature_delta_in_thread(void *arg) { // arg = part
 
   if (check_prev_elem(thread_part) == EXIT_FAILURE) {
     fprintf(stderr, CHECK_PREV_ERR_MSG);
-    return((void *)THREAD_FAIL);
+    return ((void *)THREAD_FAIL);
   }
 
   if (local_max.delta > thread_part->max_delta_temperature->delta) {
@@ -152,7 +152,6 @@ int find_max_temperature_delta_in_array(part_t *part) {
       return EXIT_FAILURE;
     }
   }
-
 
   free(thread_parts);
   return EXIT_SUCCESS;

@@ -1,0 +1,5 @@
+add_executable(test_temp_analyzer test_temp_analyzer.cpp)
+
+target_link_libraries(test_temp_analyzer gtest temperature_analyzer task -lpthread)
+
+add_test(NAME test_temp_analyzer COMMAND test_temp_analyzer)

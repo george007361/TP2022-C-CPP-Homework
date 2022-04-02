@@ -6,6 +6,7 @@
 
 extern "C" {
 #include "task.h"
+#include "temperature_analyzer.h"
 }
 
 int main(int argc, char **argv) {
@@ -13,19 +14,7 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
-TEST(RunTaskFunc, NullPtrParam) {
-  int argv;
-  EXPECT_EQ(run_task(argv, nullptr), EXIT_FAILURE);
-}
-
-TEST(FindMaxDeltaTempInFile, NullPtrParam) {
-  delta_temperature_t dt;
-  FILE *file;
-  EXPECT_EQ(find_max_temperature_delta_in_file(&dt, nullptr), EXIT_FAILURE);
-  EXPECT_EQ(find_max_temperature_delta_in_file(nullptr, file), EXIT_FAILURE);
-}
-
-TEST(FindMaxDeltaTempInFile, NoErr) {
+TEST(TestSerialAlg, NoErr) {
   delta_temperature_t dt;
   char *fname = realpath("./examples/ex1.txt", NULL);
   FILE *file = fopen(fname, "r");
