@@ -122,3 +122,16 @@ jobs:
         run: scan-build make -C buildserial
       - name: Scan-Build parallel
         run: scan-build make -C buildparallel
+  Stress_test:
+    name: With scan-build
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install -y gcc
+      - run: chmod -x ./benchmark/run_benchmark.sh 
+      - run: chmod -x ./benchmark/build.sh 
+      - run: chmod -x ./benchmark/clear.sh 
+      - run: cd ./benchmark
+      - run: sh ./run_benchmark.sh
+      
