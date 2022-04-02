@@ -52,7 +52,7 @@ jobs:
           files: gcovrrepser.xml
       
       - name: Generate coverage report parallel
-        run: cd ../buildparallel
+        run: cd ./buildparallel
       - run: gcovr -r . -x -o ./buildparallel/gcovrreppar.xml
       
       - name: Upload coverage report parallel
@@ -85,9 +85,9 @@ jobs:
       - name: Install valgrind
         run: sudo apt update
       - run: sudo apt install -y valgrind
-      - run: cmake -B buildserial -DSANITIZERS=ON -DUSE_SERIAL=ON
+      - run: cmake -B buildserial -DSANITIZERS=OFF -DUSE_SERIAL=ON
       - run: make -C buildserial
-      - run: cmake -B buildparallel -DSANITIZERS=ON -DUSE_SERIAL=OFF
+      - run: cmake -B buildparallel -DSANITIZERS=OFF -DUSE_SERIAL=OFF
       - run: make -C buildparallel
       - name: Run valgrind serial
         run: valgrind --leak-check=full --tool=memcheck ./buildserial/main --file examples/ex1.txt 
