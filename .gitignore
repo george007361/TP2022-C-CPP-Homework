@@ -53,9 +53,10 @@ dkms.conf
 
 
 #My
-
-build/
+.idea
+.vscode
+build*/
 build_local/
 cmake-build-debug/
-.*/
-
+check*
+*/data*
