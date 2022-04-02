@@ -3,7 +3,7 @@ on:
   pull_request:
   push: 
     branches: 
-      - HW2_develop
+      - test_ci_2
 jobs:
   Build:
     name: Build
