@@ -43,7 +43,7 @@ int runTest(string pathToExe, double &timePassed) {
   int exitCode = 0;
   struct timespec startTime, endTime;
   clock_gettime(CLOCK_REALTIME, &startTime);
-  cout << "Found max: " << execCommand(pathToExe, exitCode);// << endl;
+  cout << "Found max: " << execCommand(pathToExe, exitCode); // << endl;
   clock_gettime(CLOCK_REALTIME, &endTime);
   if (exitCode == EXIT_FAILURE) {
 
@@ -128,7 +128,8 @@ int main(int argc, char *argv[]) {
 
     // run parallel
     cout << "  Parallel: Test #" << i + 1 << ". Time passed:" << time
-         << " millisec (10^-3 sec)" << endl << endl;
+         << " millisec (10^-3 sec)" << endl
+         << endl;
     medParallel += time;
   }
 
