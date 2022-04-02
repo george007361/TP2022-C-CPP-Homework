@@ -38,7 +38,7 @@ jobs:
       - name: Run tests
         run: ./buildserial/lib/utils/tests/test_utils
       - run: ./buildserial/lib/task/tests/test_task
-        run: ./buildparallel/lib/utils/tests/test_utils
+      - run: ./buildparallel/lib/utils/tests/test_utils
       - run: ./buildparallel/lib/task/tests/test_task
       
       - name: Generate coverage report serial
