@@ -134,4 +134,4 @@ jobs:
       - run: chmod -x ./benchmark/scripts/build.sh
       - run: chmod -x ./benchmark/scripts/clear.sh
       - run: cd ./benchmark
-      - run: sh ./run_benchmark.sh
+      - run: sh run_benchmark.sh
