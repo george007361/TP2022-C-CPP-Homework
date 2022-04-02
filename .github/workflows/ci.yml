@@ -35,11 +35,12 @@ jobs:
       - run: cmake -B buildparallel -DUSE_SERIAL=OFF -DCOVERAGE=ON
       - run: make -C buildparallel
       
-      - name: Run tests
-        run: ./buildserial/lib/utils/tests/test_utils
+      - run: ./buildserial/lib/utils/tests/test_utils
       - run: ./buildserial/lib/task/tests/test_task
+      - run: ./buildserial/lib/temperature_analyzer_serial/tests/test_temp_analyzer
       - run: ./buildparallel/lib/utils/tests/test_utils
       - run: ./buildparallel/lib/task/tests/test_task
+      - run: ./buildparallel/lib/temperature_analyzer_parallel/tests/test_temp_analyzer
       
       - name: Generate coverage report serial
         run: cd ./buildserial
@@ -92,7 +93,7 @@ jobs:
       - name: Run valgrind serial
         run: valgrind --leak-check=full --tool=memcheck ./buildserial/main --file examples/ex1.txt 
       - name: Run valgrind parallel
-        run: valgrind --leak-check=full --tool=memcheck ./parallel/main --file examples/ex1.txt 
+        run: valgrind --leak-check=full --tool=memcheck ./buildparallel/main --file examples/ex1.txt 
 
   Linters:
     name: With linters
